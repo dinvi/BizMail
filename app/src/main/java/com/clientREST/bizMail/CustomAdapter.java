@@ -95,15 +95,14 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
                         //sarà sincrona quindi non è necessario utilizzare altra activity.
                         //Da utilizzare appena il server effettuerà il deploy della
                         //richiesta su YARN
-                        /*
+
                         Intent intent = new Intent(mContext, MailProcessActivity.class);
                         intent.putExtra("mailObject",mail);
                         mContext.startActivity(intent);
-                        */
 
                         //Tale metodo quando il server effettuerà il deploy su YARN
                         //dovrà essere eliminato.
-                        queryMail(mail);
+                        //queryMail(mail);
                     }
                 });
                 if (mail.isSpam()) {
@@ -157,7 +156,7 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
 
     }
 
-
+    /*
     //Tale metodo quando il server effettuerà il deploy su YARN
     //dovrà essere eliminato.
     private void queryMail(Mail mail) {
@@ -179,5 +178,6 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
         }
 
     }
+    */
 
 }

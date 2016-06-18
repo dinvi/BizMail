@@ -8,7 +8,8 @@
     <string name="trash">Trash</string>
     <string name="testGet">Test HTTP GET</string>
     <string name="testPost">Test HTTP POST</string>
-    <string name="get">HTTP GET</string>
+    <string name="query">Classify Mail</string>
+    <string name="get">GET Result</string>
     <string name="post">HTTP POST</string>
 
     <!-- Mail Activity -->

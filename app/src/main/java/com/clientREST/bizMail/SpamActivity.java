@@ -2,8 +2,10 @@ package com.clientREST.bizMail;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,16 +20,22 @@ import java.util.List;
 
 public class SpamActivity extends AppCompatActivity {
 
-    private static final String TAG = "InboxActivity";
+    private static final String TAG = "SpamActivity";
 
     private static final String ACTION_UPDATE = "UPDATE_MODEL";
     private static final String ACTION_QUERY = "QUERY";
 
     private static final String CLASSIFICATION = "classification";
-    private static final String STATE = "state";
+
+    private static final String ID_REQ = "id";
+    private static final String TYPE_REQ = "type";
+    private static final String STATE_REQ = "state";
+
 
     CustomAdapter adapter;
     List<Mail> spam_mail_list = new ArrayList<>();
+    Request req;
+
 
     Mail m1 = new Mail("IA@rogers.com", "Market Internet Access",
             "Premium Internet Access for only $14.95 per month or less!" +
@@ -102,16 +110,30 @@ public class SpamActivity extends AppCompatActivity {
 
                 try {
                     jsonObj = new JSONObject(response);
-                    classification = jsonObj.getString(CLASSIFICATION);
+                    //classification = jsonObj.getString(CLASSIFICATION);
+                    req = new Request(
+                            Integer.parseInt(jsonObj.getString(ID_REQ)),
+                            jsonObj.getString(TYPE_REQ),
+                            jsonObj.getString(STATE_REQ));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                Toast.makeText(context, "Mail Classification: " + classification, Toast.LENGTH_LONG).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(SpamActivity.this);
+                builder.setTitle("Query Mail");
+                builder.setMessage("Request received:\n"+req.toString());
+                builder.setPositiveButton("BACK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+
+                //Toast.makeText(context, "Mail Classification: " + classification, Toast.LENGTH_LONG).show();
             }else if(intent.getAction().equalsIgnoreCase(ACTION_UPDATE)){
                 try {
                     jsonObj = new JSONObject(response);
-                    state = jsonObj.getString(STATE);
+                    state = jsonObj.getString(STATE_REQ);
                     if(state.equalsIgnoreCase("SUCCESS")) {
                         Toast.makeText(context, "Update Model Successfully", Toast.LENGTH_SHORT).show();
                     }else{

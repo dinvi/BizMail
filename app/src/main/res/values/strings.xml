@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">BizMail</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Main Activity -->
+    <string name="inbox">Inbox</string>
+    <string name="spam">Spam</string>
+    <string name="trash">Trash</string>
+    <string name="testGet">Test HTTP GET</string>
+    <string name="testPost">Test HTTP POST</string>
+    <string name="get">HTTP GET</string>
+    <string name="post">HTTP POST</string>
+
+    <!-- Mail Activity -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="email">bizmail@bizmate.it</string>
+    <string name="title_activity_mail">Mail</string>
+
+    <!-- Test Activity -->
+    <string name="title_activity_get">HTTP GET</string>
+    <string name="title_activity_post">HTTP POST</string>
+
+
+    <!-- Inbox Activity -->
+    <string name="title_activity_inbox">Inbox</string>
+
+    <!-- Spam Activity -->
+    <string name="title_activity_spam">Spam</string>
+
+</resources>

@@ -1,0 +1,71 @@
+if (mail.isSpam()) {
+                    builder.setNegativeButton("SET AS HAM", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String statement = "val mail = \"" + mail.toString() + "\";" +
+                                    "val file_ham = new java.io.File(\"/home/hduser/BizProject/ham.txt\");" +
+                                    "val bw = new java.io.BufferedWriter(new java.io.FileWriter(file_ham, true));" +
+                                    "bw.write(mail);" +
+                                    "bw.newLine();" +
+                                    "bw.flush();" +
+                                    "val ham = sc.textFile(\"file:///home/hduser/BizProject/ham.txt\");" +
+                                    "val spam = sc.textFile(\"file:///home/hduser/BizProject/spam.txt\");" +
+                                    "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
+                                    "val spamLabelledTF = spam.map { line =>" +
+                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
+                                    "org.apache.spark.mllib.regression.LabeledPoint(1, hashingTF.transform(words));" +
+                                    "}" +
+                                    "val hamLabelledTF = ham.map { line =>" +
+                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
+                                    "org.apache.spark.mllib.regression.LabeledPoint(0, hashingTF.transform(words));" +
+                                    "}" +
+                                    "val data = spamLabelledTF.union(hamLabelledTF);" +
+                                    "val model = org.apache.spark.mllib.classification.NaiveBayes.train(data, lambda = 1.0, modelType = \"multinomial\");" +
+                                    "val uri = \"/data/myNaiveBayesModel/\";" +
+                                    "val config = new org.apache.hadoop.conf.Configuration();" +
+                                    "val fs = org.apache.hadoop.fs.FileSystem.get(java.net.URI.create(uri), config);" +
+                                    "fs.delete(new org.apache.hadoop.fs.Path(uri), true);" +
+                                    "fs.close();" +
+                                    "model.save(sc, \"/data/myNaiveBayesModel\")";
+                            sendPost(statement);
+                        }
+                    });
+                }else {
+                    builder.setNegativeButton("SET AS SPAM", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String statement = "val mail = \"" + mail.toString() + "\";" +
+                                    "val file_spam = new java.io.File(\"/home/hduser/BizProject/spam.txt\");" +
+                                    "val bw = new java.io.BufferedWriter(new java.io.FileWriter(file_spam, true));" +
+                                    "bw.write(mail);" +
+                                    "bw.newLine();" +
+                                    "bw.flush();" +
+                                    "val ham = sc.textFile(\"file:///home/hduser/BizProject/ham.txt\");" +
+                                    "val spam = sc.textFile(\"file:///home/hduser/BizProject/spam.txt\");" +
+                                    "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
+                                    "val spamLabelledTF = spam.map { line => " +
+                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
+                                    "org.apache.spark.mllib.regression.LabeledPoint(1, hashingTF.transform(words));" +
+                                    "};" +
+                                    "val hamLabelledTF = ham.map { line =>" +
+                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
+                                    "org.apache.spark.mllib.regression.LabeledPoint(0, hashingTF.transform(words));" +
+                                    "};" +
+                                    "val data = spamLabelledTF.union(hamLabelledTF);" +
+                                    "val model = org.apache.spark.mllib.classification.NaiveBayes.train(data, lambda = 1.0, modelType = \"multinomial\");" +
+                                    "val uri = \"/data/myNaiveBayesModel/\";" +
+                                    "val config = new org.apache.hadoop.conf.Configuration();" +
+                                    "val fs = org.apache.hadoop.fs.FileSystem.get(java.net.URI.create(uri), config);" +
+                                    "fs.delete(new org.apache.hadoop.fs.Path(uri), true);" +
+                                    "fs.close();" +
+                                    "model.save(sc, \"/data/myNaiveBayesModel\")";
+                            sendPost(statement);
+                        }
+                    });
+
+
+String statement = "val mail = \"" + mail.toString() + "\";" +
+                "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
+                "val mailTF = hashingTF.transform(mail.split(\" \").map(_.toLowerCase));" +
+                "val model = org.apache.spark.mllib.classification.NaiveBayesModel.load(sc, \"/data/myNaiveBayesModel\");" +
+                "val prediction = model.predict(mailTF);" +
+                "if (prediction == 1.0) println(\"SPAM\") else println(\"HAM\")";
+        sendPost(statement);

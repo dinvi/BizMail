@@ -2,10 +2,8 @@ package com.clientREST.bizMail;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -119,26 +117,12 @@ public class InboxActivity extends AppCompatActivity {
 
                 try {
                     jsonObj = new JSONObject(response);
-                    //classification = jsonObj.getString(CLASSIFICATION);
-                    req = new Request(
-                            Integer.parseInt(jsonObj.getString(ID_REQ)),
-                            jsonObj.getString(TYPE_REQ),
-                            jsonObj.getString(STATE_REQ));
+                    classification = jsonObj.getString(CLASSIFICATION);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
-                builder.setTitle("Query Mail");
-                builder.setMessage("Request received:\n"+req.toString());
-                builder.setPositiveButton("BACK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
-
-                //Toast.makeText(context, "Mail Classification: " + classification, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Mail Classification: " + classification, Toast.LENGTH_LONG).show();
             }else if(intent.getAction().equalsIgnoreCase(ACTION_UPDATE)){
                 try {
                     jsonObj = new JSONObject(response);

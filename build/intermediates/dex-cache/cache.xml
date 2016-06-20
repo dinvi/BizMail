@@ -1,2 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/jars/classes.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-22.2.0_536405d4f72172f1ed0116a5afff6bd3ef2ac60f/classes.dex" />
+    </item>
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="624af79f98e0dc8d7bbdda53213847408306ceae">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_d1c9678ae5a7503ed612b2e6e2e4930cbf211318/classes.dex" />
+    </item>
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-22.2.0_ab9f4ff38379662e5b7fff6c3605d2a1895a5568/classes.dex" />
+    </item>
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="3dca94fb008ab1cc46459efa0f2a2628873c6281">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_89f6a7b88861a9b2ac2dda37db075ecccd6be9b8/classes.dex" />
+    </item>
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-22.2.0_f62de59ebc752ad46b6046071efd4f078540d63c/classes.dex" />
+    </item>
+    <item
+        jar="/home/hduser/BizProject/BizMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-22.2.0_d3a885560447849caef55c4bb163edf5a854b597/classes.dex" />
+    </item>
+    <item
+        jar="/home/daniele/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="true"
+        revision="22.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/home/hduser/BizProject/BizMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-22.2.0_d0136173b7a6c6857cb8b64c8befb2f8da5730e2/classes.dex" />
+    </item>
+
+</items>

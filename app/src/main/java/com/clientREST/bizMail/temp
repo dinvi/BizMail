@@ -1,71 +1,397 @@
-if (mail.isSpam()) {
+/** ASYNCHRONOUS MODE **/
+/** CustomAdapter **/
+ v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Mail From:\n" + mail.getSender());
+                builder.setMessage("Subject: " + mail.getSubject() + "\n" + mail.getText());
+                builder.setPositiveButton("VERIFY", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(mContext, MailProcessActivity.class);
+                        intent.putExtra("mailObject",mail);
+                        mContext.startActivity(intent);
+                    }
+                });
+                if (mail.isSpam()) {
                     builder.setNegativeButton("SET AS HAM", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            String statement = "val mail = \"" + mail.toString() + "\";" +
-                                    "val file_ham = new java.io.File(\"/home/hduser/BizProject/ham.txt\");" +
-                                    "val bw = new java.io.BufferedWriter(new java.io.FileWriter(file_ham, true));" +
-                                    "bw.write(mail);" +
-                                    "bw.newLine();" +
-                                    "bw.flush();" +
-                                    "val ham = sc.textFile(\"file:///home/hduser/BizProject/ham.txt\");" +
-                                    "val spam = sc.textFile(\"file:///home/hduser/BizProject/spam.txt\");" +
-                                    "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
-                                    "val spamLabelledTF = spam.map { line =>" +
-                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
-                                    "org.apache.spark.mllib.regression.LabeledPoint(1, hashingTF.transform(words));" +
-                                    "}" +
-                                    "val hamLabelledTF = ham.map { line =>" +
-                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
-                                    "org.apache.spark.mllib.regression.LabeledPoint(0, hashingTF.transform(words));" +
-                                    "}" +
-                                    "val data = spamLabelledTF.union(hamLabelledTF);" +
-                                    "val model = org.apache.spark.mllib.classification.NaiveBayes.train(data, lambda = 1.0, modelType = \"multinomial\");" +
-                                    "val uri = \"/data/myNaiveBayesModel/\";" +
-                                    "val config = new org.apache.hadoop.conf.Configuration();" +
-                                    "val fs = org.apache.hadoop.fs.FileSystem.get(java.net.URI.create(uri), config);" +
-                                    "fs.delete(new org.apache.hadoop.fs.Path(uri), true);" +
-                                    "fs.close();" +
-                                    "model.save(sc, \"/data/myNaiveBayesModel\")";
-                            sendPost(statement);
+                            updateModel(mail);
                         }
                     });
                 }else {
                     builder.setNegativeButton("SET AS SPAM", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            String statement = "val mail = \"" + mail.toString() + "\";" +
-                                    "val file_spam = new java.io.File(\"/home/hduser/BizProject/spam.txt\");" +
-                                    "val bw = new java.io.BufferedWriter(new java.io.FileWriter(file_spam, true));" +
-                                    "bw.write(mail);" +
-                                    "bw.newLine();" +
-                                    "bw.flush();" +
-                                    "val ham = sc.textFile(\"file:///home/hduser/BizProject/ham.txt\");" +
-                                    "val spam = sc.textFile(\"file:///home/hduser/BizProject/spam.txt\");" +
-                                    "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
-                                    "val spamLabelledTF = spam.map { line => " +
-                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
-                                    "org.apache.spark.mllib.regression.LabeledPoint(1, hashingTF.transform(words));" +
-                                    "};" +
-                                    "val hamLabelledTF = ham.map { line =>" +
-                                    "val words: Seq[String] = line.split(\" \").map(_.toLowerCase);" +
-                                    "org.apache.spark.mllib.regression.LabeledPoint(0, hashingTF.transform(words));" +
-                                    "};" +
-                                    "val data = spamLabelledTF.union(hamLabelledTF);" +
-                                    "val model = org.apache.spark.mllib.classification.NaiveBayes.train(data, lambda = 1.0, modelType = \"multinomial\");" +
-                                    "val uri = \"/data/myNaiveBayesModel/\";" +
-                                    "val config = new org.apache.hadoop.conf.Configuration();" +
-                                    "val fs = org.apache.hadoop.fs.FileSystem.get(java.net.URI.create(uri), config);" +
-                                    "fs.delete(new org.apache.hadoop.fs.Path(uri), true);" +
-                                    "fs.close();" +
-                                    "model.save(sc, \"/data/myNaiveBayesModel\")";
-                            sendPost(statement);
+                            updateModel(mail);
                         }
                     });
+                }
+                builder.show();
+            }
+        });
 
 
-String statement = "val mail = \"" + mail.toString() + "\";" +
-                "val hashingTF = new org.apache.spark.mllib.feature.HashingTF(10000);" +
-                "val mailTF = hashingTF.transform(mail.split(\" \").map(_.toLowerCase));" +
-                "val model = org.apache.spark.mllib.classification.NaiveBayesModel.load(sc, \"/data/myNaiveBayesModel\");" +
-                "val prediction = model.predict(mailTF);" +
-                "if (prediction == 1.0) println(\"SPAM\") else println(\"HAM\")";
-        sendPost(statement);
+
+/** InboxActivity **/
+private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // clear the progress indicator
+            if (adapter.progress != null) {
+                adapter.progress.dismiss();
+            }
+
+            String response = intent.getStringExtra(RestTask.HTTP_RESPONSE);
+            String classification = null;
+            String state = null;
+            JSONObject jsonObj = null;
+
+            if(intent.getAction().equalsIgnoreCase(ACTION_QUERY)) {
+
+                try {
+                    jsonObj = new JSONObject(response);
+                    req = new Request(
+                            Integer.parseInt(jsonObj.getString(ID_REQ)),
+                            jsonObj.getString(TYPE_REQ),
+                            jsonObj.getString(STATE_REQ));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
+                builder.setTitle("Query Mail");
+                builder.setMessage("Request received:\n"+req.toString());
+                builder.setPositiveButton("BACK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+
+            }else if(intent.getAction().equalsIgnoreCase(ACTION_UPDATE)){
+                try {
+                    jsonObj = new JSONObject(response);
+                    state = jsonObj.getString(STATE_REQ);
+
+                    if(state.equalsIgnoreCase("SUCCESS")) {
+                        Toast.makeText(context, "Update Model Successfully", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Update Model Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            Log.i(TAG, "RESPONSE = " + response);
+
+        }
+    };
+
+
+
+ /** MailProcessActivity **/
+ package com.clientREST.bizMail;
+
+ import android.app.ProgressDialog;
+ import android.content.BroadcastReceiver;
+ import android.content.Context;
+ import android.content.DialogInterface;
+ import android.content.Intent;
+ import android.content.IntentFilter;
+ import android.os.Bundle;
+ import android.support.v7.app.AlertDialog;
+ import android.support.v7.app.AppCompatActivity;
+ import android.util.Log;
+ import android.view.View;
+ import android.widget.Button;
+ import android.widget.TextView;
+ import android.widget.Toast;
+
+ import org.apache.http.client.HttpClient;
+ import org.apache.http.client.methods.HttpGet;
+ import org.apache.http.client.methods.HttpPost;
+ import org.apache.http.entity.StringEntity;
+ import org.apache.http.impl.client.DefaultHttpClient;
+ import org.json.JSONException;
+ import org.json.JSONObject;
+
+ import java.net.URI;
+
+ public class MailProcessActivity extends AppCompatActivity {
+
+     private static final String TAG = "MailProcessActivity";
+
+     //private static final String URL = "http://192.168.1.17:8080/mail/";
+     //private static final String URL_QUERY = "http://192.168.1.17:8080/mail/query";
+     private static final String URL = "http://192.168.43.105:8080/mail/";
+     private static final String URL_QUERY = "http://192.168.43.105:8080/mail/query";;
+
+     private static final String ACTION_QUERY = "QUERY";
+     private static final String ACTION_GET = "GET";
+
+     private static final String SENDER = "sender";
+     private static final String SUBJECT = "subject";
+     private static final String TEXT = "text";
+
+     private static final String ID_REQ = "id";
+     private static final String TYPE_REQ = "type";
+     private static final String STATE_REQ = "state";
+
+     private static final String CLASSIFICATION = "classification";
+
+     private TextView _address;
+     private TextView _subject;
+     private TextView _text;
+     private Button _get;
+     private Button _query;
+
+     Request req;
+     private int idRequest;
+
+     ProgressDialog progress;
+     Mail mail;
+
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_processmail);
+
+         Bundle extras = getIntent().getExtras();
+         mail = extras.getParcelable("mailObject");
+
+         _address = (TextView) findViewById(R.id.mailAddress);
+         _address.setText(mail.getSender());
+         _subject = (TextView) findViewById(R.id.mailObject);
+         _subject.setText(mail.getSubject());
+         _text = (TextView) findViewById(R.id.mailText);
+         _text.setText(mail.getText());
+
+         _query = (Button) findViewById(R.id.btn_query);
+         _get = (Button) findViewById(R.id.btn_get);
+         _get.setVisibility(View.INVISIBLE);
+
+         _query.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 queryMail(mail);
+                 _get.setVisibility(View.VISIBLE);
+             }
+         });
+
+         _get.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 queryRequest();
+             }
+         });
+
+     }
+
+     @Override
+     public void onResume() {
+         super.onResume();
+         this.registerReceiver(receiver, new IntentFilter(ACTION_QUERY));
+         this.registerReceiver(receiver, new IntentFilter(ACTION_GET));
+     }
+
+     @Override
+     public void onPause() {
+         super.onPause();
+         this.unregisterReceiver(receiver);
+     }
+
+     private void queryMail(Mail mail) {
+         try {
+             HttpPost httpPost = new HttpPost(new URI(URL_QUERY));
+             JSONObject jsonObject = new JSONObject();
+             jsonObject.accumulate(SENDER, mail.getSender());
+             jsonObject.accumulate(SUBJECT, mail.getSubject());
+             jsonObject.accumulate(TEXT, mail.getText());
+             String json = jsonObject.toString();
+             StringEntity se = new StringEntity(json);
+             httpPost.setEntity(se);
+             httpPost.setHeader("Content-type", "application/json");
+             RestTask task = new RestTask(this, ACTION_QUERY);
+             task.execute(httpPost);
+             progress = ProgressDialog.show(this, "Send process request to server...", "Waiting For Results...", true);
+         } catch (Exception e) {
+             Log.e("sessionRequest", e.getMessage());
+         }
+
+     }
+
+
+     private void queryRequest() {
+         try {
+             HttpGet httpGet = new HttpGet(new URI(URL + idRequest ));
+             RestTask task = new RestTask(this, ACTION_GET);
+             task.execute(httpGet);
+             progress = ProgressDialog.show(this, "Getting status mail ...", "Waiting For Classification...", true);
+         } catch (Exception e) {
+             Log.e(TAG, e.getMessage());
+         }
+     }
+
+     private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+         String classification;
+
+         @Override
+         public void onReceive(Context context, Intent intent) {
+
+             // clear the progress indicator
+             if (progress != null) {
+                 progress.dismiss();
+             }
+
+             String response = intent.getStringExtra(RestTask.HTTP_RESPONSE);
+             JSONObject jsonObj;
+             if(intent.getAction().equalsIgnoreCase(ACTION_QUERY)) {
+
+                 try {
+                     jsonObj = new JSONObject(response);
+                     req = new Request(
+                             Integer.parseInt(jsonObj.getString(ID_REQ)),
+                             jsonObj.getString(TYPE_REQ),
+                             jsonObj.getString(STATE_REQ));
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 }
+
+                 idRequest = req.getId();
+                 Toast.makeText(context, "Request sended to server. ID request:" + req.getId(), Toast.LENGTH_LONG).show();
+
+             }else if(intent.getAction().equalsIgnoreCase(ACTION_GET)){
+             try {
+                 jsonObj = new JSONObject(response);
+                 classification = jsonObj.getString(CLASSIFICATION);
+                 if(classification!=null)
+                     Toast.makeText(context, "Mail Classification: " + classification, Toast.LENGTH_LONG).show();
+                 else
+                     Toast.makeText(context, "Mail Classification not ready!", Toast.LENGTH_LONG).show();
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+
+         }
+         }
+     };
+
+
+ }
+
+
+/** activity_processmail **/
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="25dp"
+    android:paddingLeft="25dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/icon_list" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FROM:"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/mailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OBJECT:"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/mailObject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:textStyle="bold"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+            <TextView android:id="@+id/mailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:textColor="@color/black"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_query"
+            android:background="@color/primary"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="@string/query"
+            android:textColor="@color/accent"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_get"
+            android:background="@color/primary"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="@string/get"
+            android:textColor="@color/accent"/>
+
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AlertDialog;
@@ -34,12 +33,12 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
     Bundle bundle = new Bundle();
     Context mContext;
 
-    private static final String URL_QUERY = "http://192.168.1.17:8080/mail/query";;
-    private static final String URL_UPDATE_HAM = "http://192.168.1.17:8080/mail/updateHam";
-    private static final String URL_UPDATE_SPAM = "http://192.168.1.17:8080/mail/updateSpam";
-    //private static final String URL_QUERY = "http://192.168.43.105:8080/mail/query";;
-    //private static final String URL_UPDATE_HAM = "http://192.168.43.105:8080/mail/updateHam";
-    //private static final String URL_UPDATE_SPAM = "http://192.168.43.105:8080/mail/updateSpam";
+    //private static final String URL_QUERY = "http://192.168.1.17:8080/mail/query";;
+    //private static final String URL_UPDATE_HAM = "http://192.168.1.17:8080/mail/updateHam";
+    //private static final String URL_UPDATE_SPAM = "http://192.168.1.17:8080/mail/updateSpam";
+    private static final String URL_QUERY = "http://192.168.43.105:8080/mail/query";;
+    private static final String URL_UPDATE_HAM = "http://192.168.43.105:8080/mail/updateHam";
+    private static final String URL_UPDATE_SPAM = "http://192.168.43.105:8080/mail/updateSpam";
 
     private static final String ACTION_UPDATE = "UPDATE_MODEL";
     private static final String ACTION_QUERY = "QUERY";
@@ -91,18 +90,7 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
                 builder.setMessage("Subject: " + mail.getSubject() + "\n" + mail.getText());
                 builder.setPositiveButton("VERIFY", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Per il momento poiché il server non utilizza YARN la richiesta
-                        //sarà sincrona quindi non è necessario utilizzare altra activity.
-                        //Da utilizzare appena il server effettuerà il deploy della
-                        //richiesta su YARN
-
-                        Intent intent = new Intent(mContext, MailProcessActivity.class);
-                        intent.putExtra("mailObject",mail);
-                        mContext.startActivity(intent);
-
-                        //Tale metodo quando il server effettuerà il deploy su YARN
-                        //dovrà essere eliminato.
-                        //queryMail(mail);
+                        queryMail(mail);
                     }
                 });
                 if (mail.isSpam()) {
@@ -156,7 +144,6 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
 
     }
 
-    /*
     //Tale metodo quando il server effettuerà il deploy su YARN
     //dovrà essere eliminato.
     private void queryMail(Mail mail) {
@@ -178,6 +165,5 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
         }
 
     }
-    */
 
 }

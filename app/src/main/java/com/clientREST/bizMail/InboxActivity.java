@@ -34,30 +34,12 @@ public class InboxActivity extends AppCompatActivity {
     List<Mail> ham_mail_list = new ArrayList<>();
     Request req;
 
-    Mail m1 = new Mail("skip@pobox.com", "Speed",
-            "If the frequency of my laptop's disk chirps are any indication, I'd say" +
-                    "hammie is about 3-5x faster than SpamAssassin.", "HAM");
-    Mail m2 = new Mail("skip@pobox.com", "SpamBayes Package",
-            "Before we get too far down this road, what do people think of creating a" +
-                    "spambayes package containing classifier and tokenizer?  This is just to" +
-                    "minimize clutter in site-packages.", "HAM");
-    Mail m3 = new Mail("skip@pobox.com", "Deleting duplicate spam before training?",
-            "Because I get mail through several different email addresses, I frequently" +
-                    "get duplicates (or triplicates or more-plicates) of various spam messages." +
-                    "In saving spam for later analysis I haven't always been careful to avoid" +
-                    "saving such duplicates.", "HAM");
-    Mail m4 = new Mail("tim.one@comcast.net", "Ditching WordInfo",
-            "> On my box the current system scores about 50 msgs per second (starting" +
-                    "> in memory, of course)." +
-                    "That was a guess.  Bothering to get a clock out, it was more like 80 per" +
-                    "second.  See?  A 60% speedup without changing a thing <wink>.", "HAM");
-    Mail m5 = new Mail("bkc@murkworks.com", "All Cap or Cap Word Subjects",
-            "Just curious if subject line capitalization can be used as an indicator." +
-                    "Either the percentage of characters that are caps.." +
-                    "Or, percentage starting with a capital letter (if number of words > xx)", "HAM");
-    Mail m6 = new Mail("d.invincibile@gmail.com", "Test", "Hi how are you?", "HAM");
-    Mail m7 = new Mail("promo@youwin.com", "ReadMe", "Hi Daniele, visit our website www.promo.it for new promo. " +
-            "Thank you and see you soon!", "HAM");
+    Mail m1 = new Mail(MailExample.M1_SENDER, MailExample.M1_SUBJECT, MailExample.M1_TEXT, "HAM");
+    Mail m2 = new Mail(MailExample.M2_SENDER, MailExample.M2_SUBJECT, MailExample.M2_TEXT, "HAM");
+    Mail m3 = new Mail(MailExample.M3_SENDER, MailExample.M3_SUBJECT, MailExample.M3_TEXT, "HAM");
+    Mail m4 = new Mail(MailExample.M4_SENDER, MailExample.M4_SUBJECT, MailExample.M4_TEXT, "HAM");
+    Mail m5 = new Mail(MailExample.M5_SENDER, MailExample.M5_SUBJECT, MailExample.M5_TEXT, "HAM");
+    Mail m6 = new Mail(MailExample.M6_SENDER, MailExample.M6_SUBJECT, MailExample.M6_TEXT, "HAM");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +52,6 @@ public class InboxActivity extends AppCompatActivity {
         ham_mail_list.add(m4);
         ham_mail_list.add(m5);
         ham_mail_list.add(m6);
-        ham_mail_list.add(m7);
 
         ListView listView = (ListView) findViewById(R.id.listView);
 

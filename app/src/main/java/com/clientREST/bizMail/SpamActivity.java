@@ -34,26 +34,13 @@ public class SpamActivity extends AppCompatActivity {
     List<Mail> spam_mail_list = new ArrayList<>();
     Request req;
 
+    Mail m1 = new Mail(MailExample.M7_SENDER, MailExample.M7_SUBJECT, MailExample.M7_TEXT, "SPAM");
+    Mail m2 = new Mail(MailExample.M8_SENDER, MailExample.M8_SUBJECT, MailExample.M8_TEXT, "SPAM");
+    Mail m3 = new Mail(MailExample.M9_SENDER, MailExample.M9_SUBJECT, MailExample.M9_TEXT, "SPAM");
+    Mail m4 = new Mail(MailExample.M10_SENDER, MailExample.M10_SUBJECT, MailExample.M10_TEXT, "SPAM");
+    Mail m5 = new Mail(MailExample.M11_SENDER, MailExample.M11_SUBJECT, MailExample.M11_TEXT, "SPAM");
+    Mail m6 = new Mail(MailExample.M12_SENDER, MailExample.M12_SUBJECT, MailExample.M12_TEXT, "SPAM");
 
-    Mail m1 = new Mail("IA@rogers.com", "Market Internet Access",
-            "Premium Internet Access for only $14.95 per month or less!" +
-                    "Earn $1 per Subscriber per month Go To:" +
-                    "http://new.isp.50megs.com", "SPAM");
-
-    Mail m2 = new Mail("info@smokesdirect.com", "Cheap Fags",
-            "If you are fed up of being 'ripped off' by the British government every time you buy your tobacco," +
-                    " then you should visit our website, where you can now buy 4 cartons of cigarettes, " +
-                    "or 40 pouches of rolling tobacco from as little as 170 Euros (approx 105 pounds), " +
-                    "inclusive of delivery by registered air mail from our office in Spain.", "SPAM");
-
-    Mail m3 = new Mail("safety33o@l5.newnamedns.com", "ADV: Lowest life insurance rates available!",
-            "Lowest rates available for term life insurance! Take a moment and fill out" +
-                    "our online form to see the low rate you qualify for. Save up to 70% " +
-                    "from regular rates! Smokers accepted! http://www.newnamedns.com/termlife/" +
-                    "Representing quality nationwide carriers. Act now!", "SPAM");
-
-    Mail m4 = new Mail("giqq9dosuurty99@excite.com", "Play a Hilarious Phone Prank",
-            "Wind up your mates today! Please visit http://ukprankcalls.com", "SPAM");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +50,8 @@ public class SpamActivity extends AppCompatActivity {
         spam_mail_list.add(m2);
         spam_mail_list.add(m3);
         spam_mail_list.add(m4);
+        spam_mail_list.add(m5);
+        spam_mail_list.add(m6);
 
         ListView listView = (ListView) findViewById(R.id.listView);
 

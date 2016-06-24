@@ -33,12 +33,12 @@ public class CustomAdapter extends ArrayAdapter<Mail> {
     Bundle bundle = new Bundle();
     Context mContext;
 
-    //private static final String URL_QUERY = "http://192.168.1.17:8080/mail/query";;
-    //private static final String URL_UPDATE_HAM = "http://192.168.1.17:8080/mail/updateHam";
-    //private static final String URL_UPDATE_SPAM = "http://192.168.1.17:8080/mail/updateSpam";
-    private static final String URL_QUERY = "http://192.168.43.105:8080/mail/query";;
-    private static final String URL_UPDATE_HAM = "http://192.168.43.105:8080/mail/updateHam";
-    private static final String URL_UPDATE_SPAM = "http://192.168.43.105:8080/mail/updateSpam";
+    private static final String URL_QUERY = "http://192.168.1.17:8080/mail/query";;
+    private static final String URL_UPDATE_HAM = "http://192.168.1.17:8080/mail/updateHam";
+    private static final String URL_UPDATE_SPAM = "http://192.168.1.17:8080/mail/updateSpam";
+    //private static final String URL_QUERY = "http://192.168.43.105:8080/mail/query";;
+    //private static final String URL_UPDATE_HAM = "http://192.168.43.105:8080/mail/updateHam";
+    //private static final String URL_UPDATE_SPAM = "http://192.168.43.105:8080/mail/updateSpam";
 
     private static final String ACTION_UPDATE = "UPDATE_MODEL";
     private static final String ACTION_QUERY = "QUERY";

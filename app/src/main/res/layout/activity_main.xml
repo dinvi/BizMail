@@ -47,7 +47,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:layout_marginBottom="24dp"
-            android:text="@string/testPost"/>
+            android:text="@string/trash"/>
 
 
         <android.support.v7.widget.AppCompatButton
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
-            android:text="@string/testGet"/>
+            android:text="@string/setting"/>
 
 
     </LinearLayout>

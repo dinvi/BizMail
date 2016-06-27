@@ -25,8 +25,6 @@ public class InboxActivity extends AppCompatActivity {
 
     private static final String CLASSIFICATION = "classification";
 
-    private static final String ID_REQ = "id";
-    private static final String TYPE_REQ = "type";
     private static final String STATE_REQ = "state";
 
 
@@ -34,12 +32,12 @@ public class InboxActivity extends AppCompatActivity {
     List<Mail> ham_mail_list = new ArrayList<>();
     Request req;
 
-    Mail m1 = new Mail(MailExample.M1_SENDER, MailExample.M1_SUBJECT, MailExample.M1_TEXT, "HAM");
-    Mail m2 = new Mail(MailExample.M2_SENDER, MailExample.M2_SUBJECT, MailExample.M2_TEXT, "HAM");
-    Mail m3 = new Mail(MailExample.M3_SENDER, MailExample.M3_SUBJECT, MailExample.M3_TEXT, "HAM");
-    Mail m4 = new Mail(MailExample.M4_SENDER, MailExample.M4_SUBJECT, MailExample.M4_TEXT, "HAM");
-    Mail m5 = new Mail(MailExample.M5_SENDER, MailExample.M5_SUBJECT, MailExample.M5_TEXT, "HAM");
-    Mail m6 = new Mail(MailExample.M6_SENDER, MailExample.M6_SUBJECT, MailExample.M6_TEXT, "HAM");
+    Mail m1 = new Mail(MailExample.HAM1_SENDER, MailExample.HAM1_SUBJECT, MailExample.HAM1_TEXT, "HAM");
+    Mail m2 = new Mail(MailExample.HAM2_SENDER, MailExample.HAM2_SUBJECT, MailExample.HAM2_TEXT, "HAM");
+    Mail m3 = new Mail(MailExample.HAM3_SENDER, MailExample.HAM3_SUBJECT, MailExample.HAM3_TEXT, "HAM");
+    Mail m4 = new Mail(MailExample.HAM4_SENDER, MailExample.HAM4_SUBJECT, MailExample.HAM4_TEXT, "HAM");
+    Mail m5 = new Mail(MailExample.HAM5_SENDER, MailExample.HAM5_SUBJECT, MailExample.HAM5_TEXT, "HAM");
+    Mail m6 = new Mail(MailExample.HAM6_SENDER, MailExample.HAM6_SUBJECT, MailExample.HAM6_TEXT, "HAM");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +53,9 @@ public class InboxActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listView);
 
+        adapter = new CustomAdapter(InboxActivity.this, R.layout.listview_layout, ham_mail_list);
+        listView.setAdapter(adapter);
 
-        if (ham_mail_list.size() > 0) {
-            adapter = new CustomAdapter(InboxActivity.this, R.layout.listview_layout, ham_mail_list);
-            listView.setAdapter(adapter);
-        }
     }
 
 
@@ -76,10 +72,6 @@ public class InboxActivity extends AppCompatActivity {
         this.unregisterReceiver(receiver);
     }
 
-    /**
-     * Our Broadcast Receiver. We get notified that the data is ready, and then we
-     * put the content we receive (a string) into the TextView.
-     */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

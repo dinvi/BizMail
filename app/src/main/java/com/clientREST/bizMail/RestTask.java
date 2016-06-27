@@ -29,12 +29,6 @@ public class RestTask extends AsyncTask<HttpUriRequest, Void, String>
         mClient = new DefaultHttpClient();
     }
 
-    public RestTask(Context context, String action, HttpClient client) {
-        mContext = context;
-        mAction = action;
-        mClient = client;
-    }
-
     @Override
     protected String doInBackground(HttpUriRequest... params) {
         try {

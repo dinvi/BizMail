@@ -25,8 +25,6 @@ public class SpamActivity extends AppCompatActivity {
 
     private static final String CLASSIFICATION = "classification";
 
-    private static final String ID_REQ = "id";
-    private static final String TYPE_REQ = "type";
     private static final String STATE_REQ = "state";
 
 
@@ -34,12 +32,12 @@ public class SpamActivity extends AppCompatActivity {
     List<Mail> spam_mail_list = new ArrayList<>();
     Request req;
 
-    Mail m1 = new Mail(MailExample.M7_SENDER, MailExample.M7_SUBJECT, MailExample.M7_TEXT, "SPAM");
-    Mail m2 = new Mail(MailExample.M8_SENDER, MailExample.M8_SUBJECT, MailExample.M8_TEXT, "SPAM");
-    Mail m3 = new Mail(MailExample.M9_SENDER, MailExample.M9_SUBJECT, MailExample.M9_TEXT, "SPAM");
-    Mail m4 = new Mail(MailExample.M10_SENDER, MailExample.M10_SUBJECT, MailExample.M10_TEXT, "SPAM");
-    Mail m5 = new Mail(MailExample.M11_SENDER, MailExample.M11_SUBJECT, MailExample.M11_TEXT, "SPAM");
-    Mail m6 = new Mail(MailExample.M12_SENDER, MailExample.M12_SUBJECT, MailExample.M12_TEXT, "SPAM");
+    Mail m1 = new Mail(MailExample.SPAM1_SENDER, MailExample.SPAM1_SUBJECT, MailExample.SPAM1_TEXT, "SPAM");
+    Mail m2 = new Mail(MailExample.SPAM2_SENDER, MailExample.SPAM2_SUBJECT, MailExample.SPAM2_TEXT, "SPAM");
+    Mail m3 = new Mail(MailExample.SPAM3_SENDER, MailExample.SPAM3_SUBJECT, MailExample.SPAM3_TEXT, "SPAM");
+    Mail m4 = new Mail(MailExample.SPAM4_SENDER, MailExample.SPAM4_SUBJECT, MailExample.SPAM4_TEXT, "SPAM");
+    Mail m5 = new Mail(MailExample.SPAM5_SENDER, MailExample.SPAM5_SUBJECT, MailExample.SPAM5_TEXT, "SPAM");
+    Mail m6 = new Mail(MailExample.SPAM6_SENDER, MailExample.SPAM6_SUBJECT, MailExample.SPAM6_TEXT, "SPAM");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +53,9 @@ public class SpamActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listView);
 
-        if (spam_mail_list.size() > 0) {
-            adapter = new CustomAdapter(SpamActivity.this, R.layout.listview_layout, spam_mail_list);
-            listView.setAdapter(adapter);
+        adapter = new CustomAdapter(SpamActivity.this, R.layout.listview_layout, spam_mail_list);
+        listView.setAdapter(adapter);
 
-        }
     }
 
     @Override
@@ -75,10 +71,6 @@ public class SpamActivity extends AppCompatActivity {
         this.unregisterReceiver(receiver);
     }
 
-    /**
-     * Our Broadcast Receiver. We get notified that the data is ready, and then we
-     * put the content we receive (a string) into the TextView.
-     */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
